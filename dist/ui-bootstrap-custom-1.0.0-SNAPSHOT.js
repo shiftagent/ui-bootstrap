@@ -5,7 +5,7 @@
  * Version: 1.0.0-SNAPSHOT - 2015-11-26
  * License: MIT
  */
-angular.module("ui.bootstrap", ["ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.position","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.popover","ui.bootstrap.bindHtml","ui.bootstrap.transition"]);
+angular.module("ui.bootstrap", ["ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.position","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.popover"]);
 angular.module('ui.bootstrap.stackedMap', [])
 /**
  * A helper, internal data structure that acts as a map but also allows getting / removing
@@ -597,6 +597,10 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
             }
           }
         }
+      };
+
+      $modalStack.length = function() {
+        return openedWindows.length;
       };
 
       return $modalStack;
