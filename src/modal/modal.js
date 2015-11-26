@@ -532,6 +532,10 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
         }
       };
 
+      $modalStack.length = function() {
+        return openedWindows.length;
+      };
+
       return $modalStack;
     }])
 
