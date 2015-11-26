@@ -540,7 +540,11 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
       options: {
         animation: true,
         backdrop: true, //can also be false or 'static'
-        keyboard: true
+        keyboard: true,
+        modalOpenFn: function() {},
+        modalCloseFn: function() {},
+        modalDismissFn: function() {}
+
       },
       $get: ['$injector', '$rootScope', '$q', '$document', '$templateRequest', '$controller', '$uibModalStack',
         function ($injector, $rootScope, $q, $document, $templateRequest, $controller, $modalStack) {
@@ -571,6 +575,14 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
             return promiseChain;
           };
 
+          $modal.setCallbacks = function(openFn, closeFn, dismissFn) {
+            angular.extend($modalProvider.options, {
+              modalOpenFn: openFn,
+              modalCloseFn: closeFn,
+              modalDismissFn: dismissFn
+            });
+          };
+
           $modal.open = function(modalOptions) {
             var modalResultDeferred = $q.defer();
             var modalOpenedDeferred = $q.defer();
@@ -584,9 +596,11 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
               closed: modalClosedDeferred.promise,
               rendered: modalRenderDeferred.promise,
               close: function (result) {
+                modalOptions.modalCloseFn(modalOptions, result);
                 return $modalStack.close(modalInstance, result);
               },
               dismiss: function (reason) {
+                modalOptions.modalDismissFn(modalOptions, reason);
                 return $modalStack.dismiss(modalInstance, reason);
               }
             };
@@ -665,6 +679,8 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
                   openedClass: modalOptions.openedClass,
                   appendTo: modalOptions.appendTo
                 });
+
+                modalOptions.modalOpenFn(modalOptions);
                 modalOpenedDeferred.resolve(true);
 
             }, function resolveError(reason) {
