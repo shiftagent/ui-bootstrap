@@ -5,7 +5,7 @@
  * Version: 1.0.0-SNAPSHOT - 2015-11-26
  * License: MIT
  */
-angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.position","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.popover","ui.bootstrap.bindHtml","ui.bootstrap.transition"]);
+angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.position","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.popover"]);
 angular.module("ui.bootstrap.tpls", ["uib/template/modal/backdrop.html","uib/template/modal/window.html","uib/template/tabs/tab.html","uib/template/tabs/tabset.html","uib/template/tooltip/tooltip-html-popup.html","uib/template/tooltip/tooltip-popup.html","uib/template/tooltip/tooltip-template-popup.html","uib/template/timepicker/timepicker.html","uib/template/datepicker/datepicker.html","uib/template/datepicker/day.html","uib/template/datepicker/month.html","uib/template/datepicker/popup.html","uib/template/datepicker/year.html","uib/template/accordion/accordion-group.html","uib/template/accordion/accordion.html","uib/template/popover/popover-html.html","uib/template/popover/popover-template.html","uib/template/popover/popover.html"]);
 angular.module('ui.bootstrap.stackedMap', [])
 /**
@@ -598,6 +598,10 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap'])
             }
           }
         }
+      };
+
+      $modalStack.length = function() {
+        return openedWindows.length;
       };
 
       return $modalStack;
