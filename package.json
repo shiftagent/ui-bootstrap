@@ -1,7 +1,7 @@
 {
   "author": "https://github.com/angular-ui/bootstrap/graphs/contributors",
   "name": "angular-ui-bootstrap",
-  "version": "1.0.0-SNAPSHOT",
+  "version": "1.0.3",
   "homepage": "http://angular-ui.github.io/bootstrap/",
   "dependencies": {},
   "directories": {
@@ -10,6 +10,7 @@
   "files": [
     "dist/", "src/", "template/"
   ],
+  "main": "index.js",
   "scripts":{
     "test": "grunt"
   },
@@ -32,13 +33,13 @@
     "grunt-html2js": "^0.3.0",
     "grunt-karma": "^0.12.0",
     "jasmine-core": "^2.2.0",
-    "karma": "^0.13.3",
+    "karma": "0.13.5",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.0",
     "karma-firefox-launcher": "^0.1.4",
     "karma-jasmine": "^0.3.5",
     "load-grunt-tasks": "^3.3.0",
-    "node-markdown": "0.1.1",
+    "marked": "^0.3.5",
     "semver": "^5.0.1",
     "shelljs": "^0.5.1"
   },

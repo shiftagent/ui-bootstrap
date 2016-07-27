@@ -55,7 +55,7 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
   };
 
   /**
-   * This is a helper function for translating camel-case to snake-case.
+   * This is a helper function for translating camel-case to snake_case.
    */
   function snake_case(name) {
     var regexp = /[A-Z]/g;
@@ -348,9 +348,9 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
             }
 
             /**
-             * Set the inital scope values. Once
+             * Set the initial scope values. Once
              * the tooltip is created, the observers
-             * will be added to keep things in synch.
+             * will be added to keep things in sync.
              */
             function prepareTooltip() {
               ttScope.title = attrs[prefix + 'Title'];
@@ -481,20 +481,18 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
             var unregisterTriggers = function() {
               triggers.show.forEach(function(trigger) {
                 if (trigger === 'outsideClick') {
-                  element[0].removeEventListener('click', toggleTooltipBind);
+                  element.off('click', toggleTooltipBind);
                 } else {
-                  element[0].removeEventListener(trigger, showTooltipBind);
-                  element[0].removeEventListener(trigger, toggleTooltipBind);
+                  element.off(trigger, showTooltipBind);
+                  element.off(trigger, toggleTooltipBind);
                 }
               });
               triggers.hide.forEach(function(trigger) {
-                trigger.split(' ').forEach(function(hideTrigger) {
-                  if (trigger === 'outsideClick') {
-                    $document[0].removeEventListener('click', bodyHideTooltipBind);
-                  } else {
-                    element[0].removeEventListener(hideTrigger, hideTooltipBind);
-                  }
-                });
+                if (trigger === 'outsideClick') {
+                  $document.off('click', bodyHideTooltipBind);
+                } else {
+                  element.off(trigger, hideTooltipBind);
+                }
               });
             };
 
@@ -506,17 +504,14 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
 
               if (triggers.show !== 'none') {
                 triggers.show.forEach(function(trigger, idx) {
-                  // Using raw addEventListener due to jqLite/jQuery bug - #4060
                   if (trigger === 'outsideClick') {
-                    element[0].addEventListener('click', toggleTooltipBind);
-                    $document[0].addEventListener('click', bodyHideTooltipBind);
+                    element.on('click', toggleTooltipBind);
+                    $document.on('click', bodyHideTooltipBind);
                   } else if (trigger === triggers.hide[idx]) {
-                    element[0].addEventListener(trigger, toggleTooltipBind);
+                    element.on(trigger, toggleTooltipBind);
                   } else if (trigger) {
-                    element[0].addEventListener(trigger, showTooltipBind);
-                    triggers.hide[idx].split(' ').forEach(function(trigger) {
-                      element[0].addEventListener(trigger, hideTooltipBind);
-                    });
+                    element.on(trigger, showTooltipBind);
+                    element.on(triggers.hide[idx], hideTooltipBind);
                   }
 
                   element.on('keypress', function(e) {
@@ -533,7 +528,14 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
             var animation = scope.$eval(attrs[prefix + 'Animation']);
             ttScope.animation = angular.isDefined(animation) ? !!animation : options.animation;
 
-            var appendToBodyVal = scope.$eval(attrs[prefix + 'AppendToBody']);
+            var appendToBodyVal;
+            var appendKey = prefix + 'AppendToBody';
+            if (appendKey in attrs && attrs[appendKey] === undefined) {
+              appendToBodyVal = true;
+            } else {
+              appendToBodyVal = scope.$eval(attrs[appendKey]);
+            }
+
             appendToBody = angular.isDefined(appendToBodyVal) ? appendToBodyVal : appendToBody;
 
             // if a tooltip is attached to <body> we need to remove it on

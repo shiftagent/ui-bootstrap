@@ -478,12 +478,13 @@ describe('typeahead tests', function() {
     });
 
     it('should invoke select callback on select', function() {
-      $scope.onSelect = function($item, $model, $label) {
+      $scope.onSelect = function($item, $model, $label, $event) {
         $scope.$item = $item;
         $scope.$model = $model;
         $scope.$label = $label;
+        $scope.$event = $event;
       };
-      var element = prepareInputEl('<div><input ng-model="result" typeahead-on-select="onSelect($item, $model, $label)" uib-typeahead="state.code as state.name for state in states | filter:$viewValue"></div>');
+      var element = prepareInputEl('<div><input ng-model="result" typeahead-on-select="onSelect($item, $model, $label, $event)" uib-typeahead="state.code as state.name for state in states | filter:$viewValue"></div>');
 
       changeInputValueTo(element, 'Alas');
       triggerKeyDown(element, 13);
@@ -492,6 +493,7 @@ describe('typeahead tests', function() {
       expect($scope.$item).toEqual($scope.states[0]);
       expect($scope.$model).toEqual('AL');
       expect($scope.$label).toEqual('Alaska');
+      expect($scope.$event.type).toEqual("keydown");
     });
 
     it('should correctly update inputs value on mapping where label is not derived from the model', function() {
@@ -687,23 +689,36 @@ describe('typeahead tests', function() {
 
     it('should activate prev/next matches on up/down keys', function() {
       changeInputValueTo(element, 'b');
-      expect(element).toBeOpenWithActive(2, 0);
+      var parentNode = element.find('ul').eq(0)[0];
+      var liIndex;
+
+      liIndex = 0;
+      expect(element).toBeOpenWithActive(2, liIndex);
+      expect(parentNode.scrollTop).toEqual(element.find('li').eq(liIndex)[0].offsetTop);
 
       // Down arrow key
       triggerKeyDown(element, 40);
-      expect(element).toBeOpenWithActive(2, 1);
+      liIndex = 1;
+      expect(element).toBeOpenWithActive(2, liIndex);
+      expect(parentNode.scrollTop).toEqual(element.find('li').eq(liIndex)[0].offsetTop);
 
       // Down arrow key goes back to first element
       triggerKeyDown(element, 40);
-      expect(element).toBeOpenWithActive(2, 0);
+      liIndex = 0;
+      expect(element).toBeOpenWithActive(2, liIndex);
+      expect(parentNode.scrollTop).toEqual(element.find('li').eq(liIndex)[0].offsetTop);
 
       // Up arrow key goes back to last element
       triggerKeyDown(element, 38);
-      expect(element).toBeOpenWithActive(2, 1);
+      liIndex = 1;
+      expect(element).toBeOpenWithActive(2, liIndex);
+      expect(parentNode.scrollTop).toEqual(element.find('li').eq(liIndex)[0].offsetTop);
 
       // Up arrow key goes back to first element
       triggerKeyDown(element, 38);
-      expect(element).toBeOpenWithActive(2, 0);
+      liIndex = 0;
+      expect(parentNode.scrollTop).toEqual(element.find('li').eq(liIndex)[0].offsetTop);
+      expect(element).toBeOpenWithActive(2, liIndex);
     });
 
     it('should close popup on escape key', function() {
@@ -1337,6 +1352,7 @@ describe('typeahead tests', function() {
       var element = prepareInputEl('<div><input ng-model="result" uib-typeahead="item for item in source | filter:$viewValue" typeahead-min-length="0"></div>');
       var inputEl = findInput(element);
       inputEl.focus();
+      $timeout.flush();
       $scope.$digest();
       expect(element).toBeOpenWithActive(3, 0);
     });

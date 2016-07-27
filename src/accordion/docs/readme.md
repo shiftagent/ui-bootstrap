@@ -5,6 +5,8 @@ The body of each accordion group is transcluded into the body of the collapsible
 ### uib-accordion settings
 
 * `close-others`
+  <small class="badge">$</small>
+  <small class="badge">C</small>
   _(Default: `true`)_ -
   Control whether expanding an item will cause the other items to close.
   
@@ -14,19 +16,21 @@ The body of each accordion group is transcluded into the body of the collapsible
 
 ### uib-accordion-group settings
 
+* `heading`
+  _(Default: `none`)_ -
+  The clickable text on the group's header. You need one to be able to click on the header for toggling.
+
 * `is-disabled`
+  <small class="badge">$</small>
   <i class="glyphicon glyphicon-eye-open"></i>
   _(Default: `false`)_ -
    Whether the accordion group is disabled or not.
 
 * `is-open`
+  <small class="badge">$</small>
   <i class="glyphicon glyphicon-eye-open"></i>
   _(Default: `false`)_ -
   Whether accordion group is open or closed.
-
-* `heading`
-  _(Default: `none`)_ -
-  The clickable text on the group's header. You need one to be able to click on the header for toggling.
 
 * `panel-class` 
   _(Default: `panel-default`)_ -
@@ -35,12 +39,6 @@ The body of each accordion group is transcluded into the body of the collapsible
 * `template-url`
   _(Default: `uib/template/accordion/accordion-group.html`)_ -
   Add the ability to override the template used on the component.
-  
-### Default settings `uibAccordionConfig`
-
-* `closeOthers`
-  _(Default: `true`)_ -
-  Control whether expanding an item will cause the other items to close.
 
 ### Accordion heading
 

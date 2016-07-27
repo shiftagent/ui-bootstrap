@@ -179,16 +179,16 @@ angular.module('ui.bootstrap.dateparser', [])
     var map = [], regex = format.split('');
 
     // check for literal values
-    var quoteIndex = format.indexOf('`');
+    var quoteIndex = format.indexOf('\'');
     if (quoteIndex > -1) {
       var inLiteral = false;
       format = format.split('');
       for (var i = quoteIndex; i < format.length; i++) {
         if (inLiteral) {
-          if (format[i] === '`') {
-            if (i + 1 < format.length && format[i + 1] === '\`') { // escaped backtick
-              format[i + 1] = '$';
-              regex[i + 1] = '';
+          if (format[i] === '\'') {
+            if (i + 1 < format.length && format[i+1] === '\'') { // escaped single quote
+              format[i+1] = '$';
+              regex[i+1] = '';
             } else { // end of literal
               regex[i] = '';
               inLiteral = false;
@@ -196,7 +196,7 @@ angular.module('ui.bootstrap.dateparser', [])
           }
           format[i] = '$';
         } else {
-          if (format[i] === '`') { // start of literal
+          if (format[i] === '\'') { // start of literal
             format[i] = '$';
             regex[i] = '';
             inLiteral = true;
@@ -329,5 +329,37 @@ angular.module('ui.bootstrap.dateparser', [])
 
   function toInt(str) {
     return parseInt(str, 10);
+  }
+
+  this.toTimezone = toTimezone;
+  this.fromTimezone = fromTimezone;
+  this.timezoneToOffset = timezoneToOffset;
+  this.addDateMinutes = addDateMinutes;
+  this.convertTimezoneToLocal = convertTimezoneToLocal;
+  
+  function toTimezone(date, timezone) {
+    return date && timezone ? convertTimezoneToLocal(date, timezone) : date;
+  }
+
+  function fromTimezone(date, timezone) {
+    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
+  }
+
+  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
+  function timezoneToOffset(timezone, fallback) {
+    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
+    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
+  }
+
+  function addDateMinutes(date, minutes) {
+    date = new Date(date.getTime());
+    date.setMinutes(date.getMinutes() + minutes);
+    return date;
+  }
+
+  function convertTimezoneToLocal(date, timezone, reverse) {
+    reverse = reverse ? -1 : 1;
+    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
+    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
   }
 }]);

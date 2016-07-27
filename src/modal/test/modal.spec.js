@@ -1,3 +1,51 @@
+describe('$uibResolve', function() {
+  beforeEach(module('ui.bootstrap.modal'));
+
+  it('should resolve invocables and return promise with object of resolutions', function() {
+    module(function($provide) {
+      $provide.factory('bar', function() {
+        return 'bar';
+      });
+    });
+
+    inject(function($q, $rootScope, $uibResolve) {
+      $uibResolve.resolve({
+        foo: 'bar',
+        bar: $q.resolve('baz'),
+        baz: function() {
+          return 'boo';
+        }
+      }).then(function(resolves) {
+          expect(resolves).toEqual({
+            foo: 'bar',
+            bar: 'baz',
+            baz: 'boo'
+          });
+        });
+
+      $rootScope.$digest();
+    });
+  });
+
+  describe('with custom resolver', function() {
+    beforeEach(module(function($provide, $uibResolveProvider) {
+      $provide.factory('$resolve', function() {
+        return {
+          resolve: jasmine.createSpy()
+        };
+      });
+
+      $uibResolveProvider.setResolver('$resolve');
+    }));
+
+    it('should call $resolve.resolve', inject(function($uibResolve, $resolve) {
+      $uibResolve.resolve({foo: 'bar'}, {}, null, null);
+
+      expect($resolve.resolve).toHaveBeenCalledWith({foo: 'bar'}, {}, null, null);
+    }));
+  });
+});
+
 describe('$uibModal', function () {
   var $animate, $controllerProvider, $rootScope, $document, $compile, $templateCache, $timeout, $q;
   var $uibModal, $uibModalStack, $uibModalProvider;
@@ -368,7 +416,6 @@ describe('$uibModal', function () {
     });
 
     it('should reject returned promise on dismiss', function() {
-
       var modal = open({template: '<div>Content</div>'});
       dismiss(modal, 'esc');
 
@@ -663,11 +710,21 @@ describe('$uibModal', function () {
       });
 
       it('should allow usage of bindToController', function() {
-        open({template: '<div>{{test.fromCtrl}} {{test.isModalInstance}}</div>', controller: function($uibModalInstance) {
-          this.fromCtrl = 'Content from ctrl';
-          this.isModalInstance = angular.isObject($uibModalInstance) && angular.isFunction($uibModalInstance.close);
-        }, controllerAs: 'test', bindToController: true});
-        expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
+        var $scope = $rootScope.$new(true);
+        $scope.foo = 'bar';
+        open({
+          template: '<div>{{test.fromCtrl}} {{test.closeDismissPresent()}} {{test.foo}}</div>',
+          controller: function($uibModalInstance) {
+            this.fromCtrl = 'Content from ctrl';
+            this.closeDismissPresent = function() {
+              return angular.isFunction(this.$close) && angular.isFunction(this.$dismiss);
+            };
+          },
+          controllerAs: 'test',
+          bindToController: true,
+          scope: $scope
+        });
+        expect($document).toHaveModalOpenWithContent('Content from ctrl true bar', 'div');
       });
     });
 
@@ -1118,7 +1175,7 @@ describe('$uibModal', function () {
   });
 
   describe('multiple modals', function() {
-    it('it should allow opening of multiple modals', function() {
+    it('should allow opening of multiple modals', function() {
       var modal1 = open({template: '<div>Modal1</div>'});
       var modal2 = open({template: '<div>Modal2</div>'});
       expect($document).toHaveModalsOpen(2);
@@ -1128,6 +1185,17 @@ describe('$uibModal', function () {
       expect($document).toHaveModalOpenWithContent('Modal1', 'div');
 
       dismiss(modal1);
+      expect($document).toHaveModalsOpen(0);
+    });
+
+    it('should be able to dismiss all modals at once', function() {
+      var modal1 = open({template: '<div>Modal1</div>'});
+      var modal2 = open({template: '<div>Modal2</div>'});
+      expect($document).toHaveModalsOpen(2);
+
+      $uibModalStack.dismissAll();
+      $animate.flush();
+      $animate.flush();
       expect($document).toHaveModalsOpen(0);
     });
 
@@ -1410,3 +1478,4 @@ describe('$uibModal', function () {
     });
   });
 });
+
