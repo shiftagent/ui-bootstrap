@@ -4,7 +4,7 @@
 
  * Version: 1.3.3 - 2016-07-27
  * License: MIT
- */angular.module("ui.bootstrap", ["ui.bootstrap.stackedMap","ui.bootstrap.position","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.popover","ui.bootstrap.bindHtml","ui.bootstrap.transition"]);
+ */angular.module("ui.bootstrap", ["ui.bootstrap.stackedMap","ui.bootstrap.position","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.popover"]);
 angular.module('ui.bootstrap.stackedMap', [])
 /**
  * A helper, internal data structure that acts as a map but also allows getting / removing
