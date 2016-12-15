@@ -1217,7 +1217,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
           'size': modal.size,
           'index': topModalIndex,
           'animate': 'animate',
-          'ng-style': '{\'z-index\': 1050 + $$topModalIndex*10, display: \'block\'}',
+          'ng-style': '{\'z-index\': 10050 + $$topModalIndex*10, display: \'block\'}',
           'tabindex': -1,
           'uib-modal-animation-class': 'fade',
           'modal-in-class': 'in'
