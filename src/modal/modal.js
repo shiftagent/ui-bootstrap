@@ -649,6 +649,11 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
         }
       };
 
+      $modalStack.length = function() {
+        return openedWindows.length();
+      };
+
+
       return $modalStack;
     }])
 
@@ -657,7 +662,10 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
       options: {
         animation: true,
         backdrop: true, //can also be false or 'static'
-        keyboard: true
+        keyboard: true,
+        modalOpenFn: function() {},
+        modalCloseFn: function() {},
+        modalDismissFn: function() {}
       },
       $get: ['$rootScope', '$q', '$document', '$templateRequest', '$controller', '$uibResolve', '$uibModalStack',
         function ($rootScope, $q, $document, $templateRequest, $controller, $uibResolve, $modalStack) {
@@ -674,6 +682,14 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
             return promiseChain;
           };
 
+          $modal.setCallbacks = function(openFn, closeFn, dismissFn) {
+            angular.extend($modalProvider.options, {
+              modalOpenFn: openFn,
+              modalCloseFn: closeFn,
+              modalDismissFn: dismissFn
+            });
+          };
+
           $modal.open = function(modalOptions) {
             var modalResultDeferred = $q.defer();
             var modalOpenedDeferred = $q.defer();
@@ -687,9 +703,11 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
               closed: modalClosedDeferred.promise,
               rendered: modalRenderDeferred.promise,
               close: function (result) {
+                modalOptions.modalCloseFn(modalOptions, result);
                 return $modalStack.close(modalInstance, result);
               },
               dismiss: function (reason) {
+                modalOptions.modalDismissFn(modalOptions, reason);
                 return $modalStack.dismiss(modalInstance, reason);
               }
             };
@@ -789,6 +807,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
                 }
 
                 $modalStack.open(modalInstance, modal);
+                modalOptions.modalOpenFn(modalOptions);
                 modalOpenedDeferred.resolve(true);
 
                 function constructLocals(obj, template, instanceOnScope, injectable) {
