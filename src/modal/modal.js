@@ -430,7 +430,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
           backdropDomEl = angular.element('<div uib-modal-backdrop="modal-backdrop"></div>');
           backdropDomEl.attr({
             'class': 'modal-backdrop',
-            'ng-style': '{\'z-index\': 1040 + (index && 1 || 0) + index*10}',
+            'ng-style': '{\'z-index\': 10040 + (index && 1 || 0) + index*10}',
             'uib-modal-animation-class': 'fade',
             'modal-in-class': 'in'
           });
