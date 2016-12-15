@@ -4,7 +4,7 @@
 
  * Version: 2.3.2-SNAPSHOT - 2016-12-15
  * License: MIT
- */angular.module("ui.bootstrap", ["ui.bootstrap.multiMap","ui.bootstrap.stackedMap","ui.bootstrap.position","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.tabindex","ui.bootstrap.accordion","ui.bootstrap.popover","ui.bootstrap.backdrop"]);
+ */angular.module("ui.bootstrap", ["ui.bootstrap.multiMap","ui.bootstrap.stackedMap","ui.bootstrap.position","ui.bootstrap.modal","ui.bootstrap.tabs","ui.bootstrap.tooltip","ui.bootstrap.timepicker","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.collapse","ui.bootstrap.tabindex","ui.bootstrap.accordion","ui.bootstrap.popover"]);
 angular.module('ui.bootstrap.multiMap', [])
 /**
  * A helper, internal data structure that stores all references attached to key
@@ -1168,7 +1168,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
           backdropDomEl = angular.element('<div uib-modal-backdrop="modal-backdrop"></div>');
           backdropDomEl.attr({
             'class': 'modal-backdrop',
-            'ng-style': '{\'z-index\': 1040 + (index && 1 || 0) + index*10}',
+            'ng-style': '{\'z-index\': 10040 + (index && 1 || 0) + index*10}',
             'uib-modal-animation-class': 'fade',
             'modal-in-class': 'in'
           });
