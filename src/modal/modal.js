@@ -518,6 +518,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap', 'ui.bootstrap.p
       $modalStack.close = function(modalInstance, result) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow && broadcastClosing(modalWindow, result, true)) {
+          modalInstance.callCloseFn(result);
           modalWindow.value.modalScope.$$uibDestructionScheduled = true;
           modalWindow.value.deferred.resolve(result);
           removeModalWindow(modalInstance, modalWindow.value.modalOpener);
@@ -529,6 +530,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap', 'ui.bootstrap.p
       $modalStack.dismiss = function(modalInstance, reason) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow && broadcastClosing(modalWindow, reason, false)) {
+          modalInstance.callDismissFn(reason);
           modalWindow.value.modalScope.$$uibDestructionScheduled = true;
           modalWindow.value.deferred.reject(reason);
           removeModalWindow(modalInstance, modalWindow.value.modalOpener);
@@ -661,12 +663,18 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.stackedMap', 'ui.bootstrap.p
               closed: modalClosedDeferred.promise,
               rendered: modalRenderDeferred.promise,
               close: function (result) {
-                modalOptions.modalCloseFn(modalOptions, result);
                 return $modalStack.close(modalInstance, result);
               },
               dismiss: function (reason) {
-                modalOptions.modalDismissFn(modalOptions, reason);
                 return $modalStack.dismiss(modalInstance, reason);
+              },
+              callDismissFn: function(reason) {
+                modalOptions.modalDismissFn(modalOptions, reason);
+                return true;
+              },
+              callCloseFn: function(result) {
+                modalOptions.modalCloseFn(modalOptions, result);
+                return true;
               }
             };
 
